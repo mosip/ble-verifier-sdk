@@ -14800,6 +14800,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.72.6
     react-native-builder-bob: ^0.20.0
+    react-native-tuvali: "github:mosip/tuvali#v0.4.5"
     release-it: ^15.0.0
     typescript: ^5.0.2
   peerDependencies:
@@ -14807,6 +14808,16 @@ __metadata:
     react-native: "*"
   languageName: unknown
   linkType: soft
+
+"react-native-tuvali@github:mosip/tuvali#v0.4.5":
+  version: 0.4.5
+  resolution: "react-native-tuvali@https://github.com/mosip/tuvali.git#commit=6a2c22e9c75734bdbc8260344fe15d9df98e1ff0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 1045ed088d6b13e1eb6a6b8d70bab8d6582f5932f9c3a80b41c8ce3e4e663ec1a7b4d906ba9d799b7e0b6f8f69d13332b669b23e7dfeb60887dec5f4276f6a1c
+  languageName: node
+  linkType: hard
 
 "react-native-web@npm:~0.19.6":
   version: 0.19.9

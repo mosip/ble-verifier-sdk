@@ -4,16 +4,27 @@ export interface Actions {
 
 export enum State {
   IDLE = 'Idle',
+  ADVERTISING = 'Advertising',
 }
 
 export interface IntermediateState {
-  name: keyof typeof State;
+  name: State;
   data: object;
   actions: Actions;
 }
 
 export interface IdleState extends IntermediateState {
-  name: 'IDLE';
+  name: State.IDLE;
   data: object;
   actions: { startAdvertisement: () => void };
+}
+
+export interface AdvertisingState extends IntermediateState {
+  name: State.ADVERTISING;
+  data: { uri: string };
+  actions: { stopAdvertising: () => void };
+}
+
+export interface Config {
+  deviceName: string;
 }

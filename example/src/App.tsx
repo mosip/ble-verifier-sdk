@@ -8,7 +8,7 @@ export default function App() {
   const [instance, setInstance] = useState({ UI: { name: 'Loading' } });
 
   useEffect(() => {
-    setInstance(new OVPBLE());
+    setInstance(new OVPBLE({ deviceName: 'example' }));
   }, []);
 
   return (

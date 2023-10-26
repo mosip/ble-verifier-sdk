@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "example": "yarn workspace react-native-ovp-ble-example",
-    "test": "jest",
+    "test": "jest --coverage",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli lib",
@@ -48,6 +48,9 @@
   "homepage": "https://github.com/mosip/react-native-ovp-ble#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "react-native-tuvali": "github:mosip/tuvali#v0.4.5"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -89,7 +92,8 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
-    ]
+    ],
+    "coverageReporters": ["text", "html"]
   },
   "commitlint": {
     "extends": [
