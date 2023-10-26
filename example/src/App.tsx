@@ -1,18 +1,19 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-ovp-ble';
+import OVPBLE from 'react-native-ovp-ble';
+import { useEffect, useState } from 'react';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [instance, setInstance] = useState({ UI: { name: 'Loading' } });
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
+  useEffect(() => {
+    setInstance(new OVPBLE());
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Result: {instance.UI}</Text>
     </View>
   );
 }

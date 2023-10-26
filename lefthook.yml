@@ -14,3 +14,8 @@ commit-msg:
   commands:
     commitlint:
       run: npx commitlint --edit
+test:
+  parallel: true
+  commands:
+    test:
+      run: npm run test
