@@ -93,7 +93,10 @@
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ],
-    "coverageReporters": ["text", "html"]
+    "coverageReporters": [
+      "text",
+      "html"
+    ]
   },
   "commitlint": {
     "extends": [
