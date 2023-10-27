@@ -1,6 +1,10 @@
 import type { AdvertisingState, IdleState, IntermediateState } from '../types';
 import verifierHandler from './BLE/VerifierHandler';
 import stateBuilder from './StateBuilder';
+import tuvali from 'react-native-tuvali/lib/typescript/types/events';
+import type { VerifierDataEvent } from 'react-native-tuvali/lib/typescript/types/events';
+
+const { EventTypes } = tuvali;
 
 class VerifierService {
   private readonly updateIntermediateState: (state: IntermediateState) => void;
@@ -18,6 +22,7 @@ class VerifierService {
     this.updateIntermediateState = updateIntermediateState;
     this.deviceName = deviceName;
     this.updateIntermediateState(idleState);
+    verifierHandler.listenForEvents(this.handleEvents.bind(this));
   }
 
   startTransfer() {
@@ -40,6 +45,28 @@ class VerifierService {
     );
 
     this.updateIntermediateState(idleState);
+  }
+
+  private onConnected() {
+    const connectedState = stateBuilder.createConnectedState(
+      this.disconnect.bind(this)
+    );
+
+    this.updateIntermediateState(connectedState);
+  }
+
+  private handleEvents(event: VerifierDataEvent) {
+    switch (event.type) {
+      case EventTypes.onConnected:
+        this.onConnected();
+        break;
+    }
+  }
+
+  private disconnect() {
+    verifierHandler.disconnect();
+
+    // TODO: Set to idle state
   }
 }
 

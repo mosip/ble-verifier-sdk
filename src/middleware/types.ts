@@ -5,6 +5,7 @@ export interface Actions {
 export enum State {
   IDLE = 'Idle',
   ADVERTISING = 'Advertising',
+  CONNECTED = 'Connected',
 }
 
 export interface IntermediateState {
@@ -23,6 +24,12 @@ export interface AdvertisingState extends IntermediateState {
   name: State.ADVERTISING;
   data: { uri: string };
   actions: { stopAdvertising: () => void };
+}
+
+export interface ConnectedState extends IntermediateState {
+  name: State.CONNECTED;
+  data: {};
+  actions: { disconnect: () => void };
 }
 
 export interface Config {

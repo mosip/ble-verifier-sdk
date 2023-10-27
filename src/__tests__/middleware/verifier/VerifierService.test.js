@@ -1,7 +1,14 @@
 import VerifierService from '../../../middleware/verifier/VerifierService';
+import tuvali, { EventTypes } from 'react-native-tuvali';
 
 jest.mock('react-native-tuvali', () => ({
-  verifier: { startAdvertisement: jest.fn(() => 'DUMMY_URI') },
+  verifier: {
+    startAdvertisement: jest.fn(() => 'DUMMY_URI'),
+    handleDataEvents: jest.fn(),
+  },
+  EventTypes: {
+    onConnected: 'connected',
+  },
 }));
 
 describe('VerifierService', () => {
@@ -31,6 +38,23 @@ describe('VerifierService', () => {
       },
       data: { uri: 'DUMMY_URI' },
       name: 'Advertising',
+    });
+  });
+
+  it('should go to connected state on connected event from tuvali', () => {
+    const updateUIMock = jest.fn();
+    const instance = new VerifierService('test', updateUIMock);
+
+    instance.startTransfer();
+    const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
+    eventCallback({ type: EventTypes.onConnected });
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: {
+        disconnect: expect.any(Function),
+      },
+      data: {},
+      name: 'Connected',
     });
   });
 

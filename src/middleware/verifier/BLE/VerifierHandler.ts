@@ -1,4 +1,5 @@
 import tuvali from 'react-native-tuvali';
+import type { VerifierDataEvent } from 'react-native-tuvali/lib/typescript/types/events';
 
 const { verifier } = tuvali;
 
@@ -11,6 +12,17 @@ class VerifierHandler {
 
   stopAdvertising() {
     // TODO: Implement this on tuvali
+  }
+
+  listenForEvents(callback: (event: VerifierDataEvent) => void) {
+    verifier.handleDataEvents((event: VerifierDataEvent) => {
+      console.log('VerifierHandler: Received event', JSON.stringify(event));
+      callback(event);
+    });
+  }
+
+  disconnect() {
+    // TODO: Implement this
   }
 }
 

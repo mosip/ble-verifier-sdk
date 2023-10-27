@@ -1,5 +1,5 @@
 import { State } from '../types';
-import type { AdvertisingState, IdleState } from '../types';
+import type { ConnectedState, AdvertisingState, IdleState } from '../types';
 
 class StateBuilder {
   createIdleState(startAdvertisement: any): IdleState {
@@ -19,6 +19,14 @@ class StateBuilder {
       actions: {
         stopAdvertising,
       },
+    };
+  }
+
+  createConnectedState(disconnect: any): ConnectedState {
+    return {
+      name: State.CONNECTED,
+      data: {},
+      actions: { disconnect },
     };
   }
 }
