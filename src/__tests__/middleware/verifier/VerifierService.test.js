@@ -5,10 +5,15 @@ jest.mock('react-native-tuvali', () => ({
   verifier: {
     startAdvertisement: jest.fn(() => 'DUMMY_URI'),
     handleDataEvents: jest.fn(),
+    sendVerificationStatus: jest.fn(),
   },
   EventTypes: {
     onConnected: 'connected',
     onSecureChannelEstablished: 'onSecureChannelEstablished',
+    onDataReceived: 'onDataReceived',
+  },
+  VerificationStatus: {
+    ACCEPTED: 1,
   },
 }));
 
@@ -101,6 +106,34 @@ describe('VerifierService', () => {
       data: {},
       name: 'Requested',
     });
+  });
+
+  it('should go to data received state on receiving data received event', () => {
+    const updateUIMock = jest.fn();
+    const instance = new VerifierService('test', updateUIMock);
+    const dummyVC = 'DUMMY_VC';
+
+    instance.startTransfer();
+
+    const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
+    eventCallback({ type: EventTypes.onConnected });
+    eventCallback({ type: EventTypes.onSecureChannelEstablished });
+    updateUIMock.mock.calls[
+      updateUIMock.mock.calls.length - 1
+    ][0].actions.sendRequest();
+    eventCallback({ type: EventTypes.onDataReceived, data: dummyVC });
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: {},
+      data: {
+        vc: dummyVC,
+      },
+      name: 'Received',
+    });
+
+    expect(tuvali.verifier.sendVerificationStatus).toHaveBeenLastCalledWith(
+      tuvali.VerificationStatus.ACCEPTED
+    );
   });
 
   it('should stop advertisement on calling stopAction and go back to idle state', () => {

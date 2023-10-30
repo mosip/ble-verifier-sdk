@@ -66,6 +66,9 @@ class VerifierService {
       case EventTypes.onSecureChannelEstablished:
         this.onSecureConnectionEstablished();
         break;
+      case EventTypes.onDataReceived:
+        this.onDataReceived(event.data);
+        break;
     }
   }
 
@@ -87,6 +90,13 @@ class VerifierService {
     this.updateIntermediateState(securelyConnectedState);
   }
 
+  private onDataReceived(vc: string) {
+    const receivedState = stateBuilder.createReceivedState(vc);
+
+    verifierHandler.setVerificationStatus();
+    this.updateIntermediateState(receivedState);
+  }
+
   private disconnect() {
     verifierHandler.disconnect();
 
@@ -102,4 +112,5 @@ export enum State {
   CONNECTED = 'Connected',
   SECURE_CONNECTION_ESTABLISHED = 'SecureConnectionEstablished',
   REQUESTED = 'Requested',
+  RECEIVED = 'Received',
 }

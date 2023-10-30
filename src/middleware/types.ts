@@ -40,6 +40,12 @@ export interface RequestedState extends IntermediateState {
   actions: { disconnect: () => void };
 }
 
+export interface ReceivedState extends IntermediateState {
+  name: State.RECEIVED;
+  data: { vc: any };
+  actions: {};
+}
+
 export interface Config {
   deviceName: string;
 }

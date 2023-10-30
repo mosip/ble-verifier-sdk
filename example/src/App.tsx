@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import OVPBLE from 'react-native-ovp-ble';
 import QRCode from 'react-native-qrcode-svg';
+import { IntermediateState } from '../../src/middleware/types';
 
 export default function App() {
   const [instance, setInstance] = useState({});
-  const [state, setState] = useState('Loading');
+  const [state, setState] = useState<IntermediateState>({});
 
-  useEffect(() => {
+  const setupInstance = () => {
     const ovpble = new OVPBLE({ deviceName: 'example' });
 
     setState(ovpble.UI);
@@ -18,12 +19,18 @@ export default function App() {
     });
 
     setInstance(ovpble);
+  };
+
+  useEffect(() => {
+    setupInstance();
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.state}>State: {state.name}</Text>
-      <Text style={styles.state}>Data: {JSON.stringify(state.data)}</Text>
+      <Text style={styles.state}>
+        Data: {JSON.stringify(state.data)?.substring(0, 100)}...
+      </Text>
       {state.name === 'Idle' && (
         <Button
           title={'Start Transfer'}
@@ -32,6 +39,12 @@ export default function App() {
       )}
       {state.name === 'Advertising' && (
         <QRCode size={200} value={state.data.uri} />
+      )}
+      {Object.entries(state.actions || {}).map(([name, action]) => (
+        <Button key={name} title={name} onPress={() => action()} />
+      ))}
+      {state.name === 'Received' && (
+        <Button title={'Restart'} onPress={() => setupInstance()} />
       )}
     </View>
   );

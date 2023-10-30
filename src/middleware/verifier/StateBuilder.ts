@@ -1,4 +1,9 @@
-import type { AdvertisingState, ConnectedState, IdleState } from '../types';
+import type {
+  AdvertisingState,
+  ConnectedState,
+  IdleState,
+  ReceivedState,
+} from '../types';
 import type {
   RequestedState,
   SecureConnectionEstablishedState,
@@ -50,6 +55,14 @@ class StateBuilder {
       name: State.REQUESTED,
       data: {},
       actions: { disconnect },
+    };
+  }
+
+  createReceivedState(vc: any): ReceivedState {
+    return {
+      name: State.RECEIVED,
+      data: { vc },
+      actions: {},
     };
   }
 }
