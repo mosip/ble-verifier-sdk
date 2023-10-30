@@ -1,7 +1,7 @@
 import type { AdvertisingState, IdleState, IntermediateState } from '../types';
 import verifierHandler from './BLE/VerifierHandler';
 import stateBuilder from './StateBuilder';
-import tuvali from 'react-native-tuvali/lib/typescript/types/events';
+import tuvali from 'react-native-tuvali';
 import type { VerifierDataEvent } from 'react-native-tuvali/lib/typescript/types/events';
 
 const { EventTypes } = tuvali;
@@ -29,6 +29,7 @@ class VerifierService {
     this.startAdvertisement(this.deviceName);
   }
 
+  // Actions
   private startAdvertisement(name: string) {
     const uri = verifierHandler.startAdvertisement(name);
     const advertisingState: AdvertisingState =
@@ -47,6 +48,27 @@ class VerifierService {
     this.updateIntermediateState(idleState);
   }
 
+  private sendRequest() {
+    // TODO: Implement this after Tuvali supports this
+    const requestedState = stateBuilder.createRequestedState(
+      this.disconnect.bind(this)
+    );
+
+    this.updateIntermediateState(requestedState);
+  }
+
+  // Event Handling
+  private handleEvents(event: VerifierDataEvent) {
+    switch (event.type) {
+      case EventTypes.onConnected:
+        this.onConnected();
+        break;
+      case EventTypes.onSecureChannelEstablished:
+        this.onSecureConnectionEstablished();
+        break;
+    }
+  }
+
   private onConnected() {
     const connectedState = stateBuilder.createConnectedState(
       this.disconnect.bind(this)
@@ -55,12 +77,14 @@ class VerifierService {
     this.updateIntermediateState(connectedState);
   }
 
-  private handleEvents(event: VerifierDataEvent) {
-    switch (event.type) {
-      case EventTypes.onConnected:
-        this.onConnected();
-        break;
-    }
+  private onSecureConnectionEstablished() {
+    const securelyConnectedState =
+      stateBuilder.createSecureConnectionEstablishedState(
+        this.sendRequest.bind(this),
+        this.disconnect.bind(this)
+      );
+
+    this.updateIntermediateState(securelyConnectedState);
   }
 
   private disconnect() {
@@ -71,3 +95,11 @@ class VerifierService {
 }
 
 export default VerifierService;
+
+export enum State {
+  IDLE = 'Idle',
+  ADVERTISING = 'Advertising',
+  CONNECTED = 'Connected',
+  SECURE_CONNECTION_ESTABLISHED = 'SecureConnectionEstablished',
+  REQUESTED = 'Requested',
+}

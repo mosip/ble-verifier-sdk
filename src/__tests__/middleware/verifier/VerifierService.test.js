@@ -8,10 +8,15 @@ jest.mock('react-native-tuvali', () => ({
   },
   EventTypes: {
     onConnected: 'connected',
+    onSecureChannelEstablished: 'onSecureChannelEstablished',
   },
 }));
 
 describe('VerifierService', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should set state to idle state on start', () => {
     const updateUIMock = jest.fn();
     // eslint-disable-next-line no-new
@@ -55,6 +60,46 @@ describe('VerifierService', () => {
       },
       data: {},
       name: 'Connected',
+    });
+  });
+
+  it('should go to secured connection state on secure connected event from tuvali', () => {
+    const updateUIMock = jest.fn();
+    const instance = new VerifierService('test', updateUIMock);
+
+    instance.startTransfer();
+    const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
+    eventCallback({ type: EventTypes.onConnected });
+    eventCallback({ type: EventTypes.onSecureChannelEstablished });
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: {
+        sendRequest: expect.any(Function),
+        disconnect: expect.any(Function),
+      },
+      data: {},
+      name: 'SecureConnectionEstablished',
+    });
+  });
+
+  it('should go to requested state on sending request', () => {
+    const updateUIMock = jest.fn();
+    const instance = new VerifierService('test', updateUIMock);
+
+    instance.startTransfer();
+    const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
+    eventCallback({ type: EventTypes.onConnected });
+    eventCallback({ type: EventTypes.onSecureChannelEstablished });
+    updateUIMock.mock.calls[
+      updateUIMock.mock.calls.length - 1
+    ][0].actions.sendRequest();
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: {
+        disconnect: expect.any(Function),
+      },
+      data: {},
+      name: 'Requested',
     });
   });
 
