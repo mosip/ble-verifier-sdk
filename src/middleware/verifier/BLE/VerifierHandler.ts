@@ -30,7 +30,7 @@ class VerifierHandler {
   }
 
   disconnect() {
-    // TODO: Implement this
+    verifier.disconnect();
   }
 }
 

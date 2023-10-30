@@ -100,7 +100,11 @@ class VerifierService {
   private disconnect() {
     verifierHandler.disconnect();
 
-    // TODO: Set to idle state
+    const idleState: IdleState = stateBuilder.createIdleState(
+      this.startAdvertisement.bind(this, this.deviceName)
+    );
+
+    this.updateIntermediateState(idleState);
   }
 }
 

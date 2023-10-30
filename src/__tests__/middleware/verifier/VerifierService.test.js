@@ -6,6 +6,7 @@ jest.mock('react-native-tuvali', () => ({
     startAdvertisement: jest.fn(() => 'DUMMY_URI'),
     handleDataEvents: jest.fn(),
     sendVerificationStatus: jest.fn(),
+    disconnect: jest.fn(),
   },
   EventTypes: {
     onConnected: 'connected',
@@ -134,6 +135,37 @@ describe('VerifierService', () => {
     expect(tuvali.verifier.sendVerificationStatus).toHaveBeenLastCalledWith(
       tuvali.VerificationStatus.ACCEPTED
     );
+  });
+
+  it('should disconnect go back to idle state', () => {
+    const updateUIMock = jest.fn();
+    const instance = new VerifierService('test', updateUIMock);
+
+    instance.startTransfer();
+
+    const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
+    eventCallback({ type: EventTypes.onConnected });
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: {
+        disconnect: expect.any(Function),
+      },
+      data: {},
+      name: 'Connected',
+    });
+
+    updateUIMock.mock.calls[
+      updateUIMock.mock.calls.length - 1
+    ][0].actions.disconnect();
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: {
+        startAdvertisement: expect.any(Function),
+      },
+      data: {},
+      name: 'Idle',
+    });
+    expect(tuvali.verifier.disconnect).toHaveBeenCalled();
   });
 
   it('should stop advertisement on calling stopAction and go back to idle state', () => {
