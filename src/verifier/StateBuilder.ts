@@ -4,12 +4,11 @@ import type {
   ErrorState,
   IdleState,
   ReceivedState,
-} from '../types';
-import type {
   RequestedState,
   SecureConnectionEstablishedState,
+  DisconnectState,
 } from '../types';
-import { State } from './VerifierService';
+import { State } from './State';
 
 class StateBuilder {
   createIdleState(startAdvertisement: any): IdleState {
@@ -71,6 +70,14 @@ class StateBuilder {
     return {
       name: State.ERROR,
       data: { errorCode, errorMessage },
+      actions: {},
+    };
+  }
+
+  createDisconnectedState(): DisconnectState {
+    return {
+      name: State.DISCONNECTED,
+      data: {},
       actions: {},
     };
   }

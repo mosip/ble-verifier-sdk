@@ -11,7 +11,7 @@ class VerifierHandler {
   }
 
   stopAdvertising() {
-    // TODO: Implement this on tuvali
+    verifier.disconnect();
   }
 
   listenForEvents(callback: (event: VerifierDataEvent) => void) {

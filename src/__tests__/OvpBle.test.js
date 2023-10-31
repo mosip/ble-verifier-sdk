@@ -1,13 +1,16 @@
 import OvpBle from '../OvpBle';
 import VerifierService from '../verifier/VerifierService';
+import { State } from '../verifier/State';
 
 const mockStartTransfer = jest.fn();
-const mockDisconnect = jest.fn();
+const mockStopTransfer = jest.fn();
 
 jest.mock('../verifier/VerifierService', () => {
-  // Works and lets you check for constructor calls:
   return jest.fn().mockImplementation(() => {
-    return { startTransfer: mockStartTransfer, disconnect: mockDisconnect };
+    return {
+      startTransfer: mockStartTransfer,
+      stopTransfer: mockStopTransfer,
+    };
   });
 });
 
@@ -39,11 +42,43 @@ describe('OvpBLE', () => {
     expect(deviceNameFromConstructorParams).toEqual('test');
   });
 
-  it('should call disconnect on stop transfer', () => {
+  it('should call disconnect on stop transfer', (done) => {
     const instance = new OvpBle({ deviceName: 'test' });
 
+    instance.startTransfer().catch(async (e) => {
+      await expect(e).toEqual({
+        errorCode: 'OVP_001',
+        errorMessage: 'Transfer stopped',
+      });
+      done();
+    });
     instance.stopTransfer();
 
-    expect(mockDisconnect).toBeCalled();
+    expect(mockStopTransfer).toBeCalled();
+  });
+
+  it('should resolve Promise on received state', async () => {
+    const instance = new OvpBle({ deviceName: 'test' });
+    const receivedState = { name: State.RECEIVED, data: { vc: 'some vc' } };
+
+    const promise = instance.startTransfer();
+    const updateUIFromConstructorParams = VerifierService.mock.calls[0][1];
+    updateUIFromConstructorParams(receivedState);
+
+    await expect(promise).resolves.toBe(receivedState.data.vc);
+  });
+
+  it('should reject Promise on error state', async () => {
+    const instance = new OvpBle({ deviceName: 'test' });
+    const receivedState = {
+      name: State.ERROR,
+      data: { errorCode: '123', errorMessage: 'some error' },
+    };
+
+    const promise = instance.startTransfer();
+    const updateUIFromConstructorParams = VerifierService.mock.calls[0][1];
+    updateUIFromConstructorParams(receivedState);
+
+    await expect(promise).rejects.toBe(receivedState.data);
   });
 });

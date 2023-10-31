@@ -1,4 +1,4 @@
-import { State } from './verifier/VerifierService';
+import { State } from './verifier/State';
 
 export interface Actions {
   [name: string]: any;
@@ -48,8 +48,19 @@ export interface ReceivedState extends IntermediateState {
 
 export interface ErrorState extends IntermediateState {
   name: State.ERROR;
-  data: { errorCode: string; errorMessage: string };
+  data: ErrorInfo;
   actions: {};
+}
+
+export interface DisconnectState extends IntermediateState {
+  name: State.DISCONNECTED;
+  data: {};
+  actions: {};
+}
+
+export interface ErrorInfo {
+  errorCode: string;
+  errorMessage: string;
 }
 
 export interface Config {

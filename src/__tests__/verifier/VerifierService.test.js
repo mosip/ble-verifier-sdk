@@ -137,7 +137,7 @@ describe('VerifierService', () => {
     );
   });
 
-  it('should disconnect go back to idle state', () => {
+  it('should disconnect go back to idle state on disconnect action', () => {
     const updateUIMock = jest.fn();
     const service = new VerifierService('test', updateUIMock);
 
@@ -159,12 +159,11 @@ describe('VerifierService', () => {
     ][0].actions.disconnect();
 
     expect(updateUIMock).toHaveBeenLastCalledWith({
-      actions: {
-        startAdvertisement: expect.any(Function),
-      },
+      actions: {},
       data: {},
-      name: 'Idle',
+      name: 'Disconnected',
     });
+
     expect(tuvali.verifier.disconnect).toHaveBeenCalled();
   });
 
@@ -193,7 +192,7 @@ describe('VerifierService', () => {
     });
   });
 
-  it('should go to idle state and disconnect on disconnect', () => {
+  it('should go to idle state and disconnect on stop transfer', () => {
     const updateUIMock = jest.fn();
     const service = new VerifierService('test', updateUIMock);
 
@@ -205,7 +204,7 @@ describe('VerifierService', () => {
       name: 'Advertising',
     });
 
-    service.disconnect();
+    service.stopTransfer();
 
     expect(updateUIMock).toHaveBeenLastCalledWith({
       actions: { startAdvertisement: expect.any(Function) },

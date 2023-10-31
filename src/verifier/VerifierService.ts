@@ -1,4 +1,9 @@
-import type { AdvertisingState, IdleState, IntermediateState } from '../types';
+import type {
+  AdvertisingState,
+  DisconnectState,
+  IdleState,
+  IntermediateState,
+} from '../types';
 import verifierHandler from './BLE/VerifierHandler';
 import stateBuilder from './StateBuilder';
 import tuvali from 'react-native-tuvali';
@@ -30,8 +35,8 @@ class VerifierService implements IVerifierService {
     this.startAdvertisement(this.deviceName);
   }
 
-  disconnect() {
-    verifierHandler.disconnect();
+  stopTransfer() {
+    this.disconnect();
 
     const idleState: IdleState = stateBuilder.createIdleState(
       this.startAdvertisement.bind(this, this.deviceName)
@@ -59,10 +64,14 @@ class VerifierService implements IVerifierService {
     this.updateIntermediateState(idleState);
   }
 
+  private disconnect() {
+    verifierHandler.disconnect();
+  }
+
   private sendRequest() {
     // TODO: Implement this after Tuvali supports this
     const requestedState = stateBuilder.createRequestedState(
-      this.disconnect.bind(this)
+      this.onDisconnect.bind(this)
     );
 
     this.updateIntermediateState(requestedState);
@@ -88,7 +97,7 @@ class VerifierService implements IVerifierService {
 
   private onConnected() {
     const connectedState = stateBuilder.createConnectedState(
-      this.disconnect.bind(this)
+      this.onDisconnect.bind(this)
     );
 
     this.updateIntermediateState(connectedState);
@@ -98,7 +107,7 @@ class VerifierService implements IVerifierService {
     const securelyConnectedState =
       stateBuilder.createSecureConnectionEstablishedState(
         this.sendRequest.bind(this),
-        this.disconnect.bind(this)
+        this.onDisconnect.bind(this)
       );
 
     this.updateIntermediateState(securelyConnectedState);
@@ -116,16 +125,15 @@ class VerifierService implements IVerifierService {
 
     this.updateIntermediateState(errorState);
   }
+
+  private onDisconnect() {
+    this.disconnect();
+
+    const disconnectedState: DisconnectState =
+      stateBuilder.createDisconnectedState();
+
+    this.updateIntermediateState(disconnectedState);
+  }
 }
 
 export default VerifierService;
-
-export enum State {
-  IDLE = 'Idle',
-  ADVERTISING = 'Advertising',
-  CONNECTED = 'Connected',
-  SECURE_CONNECTION_ESTABLISHED = 'SecureConnectionEstablished',
-  REQUESTED = 'Requested',
-  RECEIVED = 'Received',
-  ERROR = 'Error',
-}
