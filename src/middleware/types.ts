@@ -42,7 +42,13 @@ export interface RequestedState extends IntermediateState {
 
 export interface ReceivedState extends IntermediateState {
   name: State.RECEIVED;
-  data: { vc: any };
+  data: { vc: string };
+  actions: {};
+}
+
+export interface ErrorState extends IntermediateState {
+  name: State.ERROR;
+  data: { errorCode: string; errorMessage: string };
   actions: {};
 }
 

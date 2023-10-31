@@ -1,6 +1,7 @@
 import type {
   AdvertisingState,
   ConnectedState,
+  ErrorState,
   IdleState,
   ReceivedState,
 } from '../types';
@@ -62,6 +63,14 @@ class StateBuilder {
     return {
       name: State.RECEIVED,
       data: { vc },
+      actions: {},
+    };
+  }
+
+  createErrorState(errorCode: string, errorMessage: string): ErrorState {
+    return {
+      name: State.ERROR,
+      data: { errorCode, errorMessage },
       actions: {},
     };
   }

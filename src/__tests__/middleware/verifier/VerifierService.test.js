@@ -168,6 +168,31 @@ describe('VerifierService', () => {
     expect(tuvali.verifier.disconnect).toHaveBeenCalled();
   });
 
+  it('should got to error state on error', () => {
+    const updateUIMock = jest.fn();
+    const instance = new VerifierService('test', updateUIMock);
+    const errorMessage = 'Error happened';
+    const errorCode = '123';
+
+    instance.startTransfer();
+
+    const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
+    eventCallback({
+      type: EventTypes.onError,
+      code: errorCode,
+      message: errorMessage,
+    });
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: {},
+      data: {
+        errorCode,
+        errorMessage,
+      },
+      name: 'Error',
+    });
+  });
+
   it('should stop advertisement on calling stopAction and go back to idle state', () => {
     let state = {};
     const updateUIMock = jest.fn((s) => {
