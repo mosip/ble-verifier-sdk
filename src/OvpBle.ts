@@ -1,13 +1,15 @@
 import VerifierService from './verifier/VerifierService';
 import type { Config, IntermediateState } from './types';
+import type { IOvpBle } from './IOvpBle';
+import type { IVerifierService } from './verifier/IVerifierService';
 
-class OvpBle {
+class OvpBle implements IOvpBle {
   // @ts-ignore
   private resultResolve: (value: PromiseLike<string>) => void;
   // @ts-ignore
   private resultReject: (reason?: any) => void;
   public UI: IntermediateState | undefined;
-  private service: VerifierService;
+  private service: IVerifierService;
   private stateChangeCallback: (state: IntermediateState) => void = () => {};
 
   constructor(config: Config) {
@@ -25,7 +27,7 @@ class OvpBle {
   startTransfer() {
     this.service.startTransfer();
 
-    return new Promise((res, rej) => {
+    return new Promise<string>((res, rej) => {
       this.resultResolve = res;
       this.resultReject = rej;
     });
