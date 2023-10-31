@@ -106,7 +106,7 @@ class VerifierService {
     this.updateIntermediateState(errorState);
   }
 
-  private disconnect() {
+  disconnect() {
     verifierHandler.disconnect();
 
     const idleState: IdleState = stateBuilder.createIdleState(

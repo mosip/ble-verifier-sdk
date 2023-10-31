@@ -1,3 +1,3 @@
-import OvpBle from './middleware/OvpBle';
+import OvpBle from './OvpBle';
 
 export default OvpBle;

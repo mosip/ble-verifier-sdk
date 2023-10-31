@@ -1,4 +1,4 @@
-import VerifierService from '../../../middleware/verifier/VerifierService';
+import VerifierService from '../../verifier/VerifierService';
 import tuvali, { EventTypes } from 'react-native-tuvali';
 
 jest.mock('react-native-tuvali', () => ({
@@ -39,9 +39,9 @@ describe('VerifierService', () => {
 
   it('should start advertisement on start of transfer and update state', () => {
     const updateUIMock = jest.fn();
-    const instance = new VerifierService('test', updateUIMock);
+    const service = new VerifierService('test', updateUIMock);
 
-    instance.startTransfer();
+    service.startTransfer();
 
     expect(updateUIMock).toHaveBeenLastCalledWith({
       actions: {
@@ -54,9 +54,9 @@ describe('VerifierService', () => {
 
   it('should go to connected state on connected event from tuvali', () => {
     const updateUIMock = jest.fn();
-    const instance = new VerifierService('test', updateUIMock);
+    const service = new VerifierService('test', updateUIMock);
 
-    instance.startTransfer();
+    service.startTransfer();
     const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
     eventCallback({ type: EventTypes.onConnected });
 
@@ -71,9 +71,9 @@ describe('VerifierService', () => {
 
   it('should go to secured connection state on secure connected event from tuvali', () => {
     const updateUIMock = jest.fn();
-    const instance = new VerifierService('test', updateUIMock);
+    const service = new VerifierService('test', updateUIMock);
 
-    instance.startTransfer();
+    service.startTransfer();
     const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
     eventCallback({ type: EventTypes.onConnected });
     eventCallback({ type: EventTypes.onSecureChannelEstablished });
@@ -90,9 +90,9 @@ describe('VerifierService', () => {
 
   it('should go to requested state on sending request', () => {
     const updateUIMock = jest.fn();
-    const instance = new VerifierService('test', updateUIMock);
+    const service = new VerifierService('test', updateUIMock);
 
-    instance.startTransfer();
+    service.startTransfer();
     const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
     eventCallback({ type: EventTypes.onConnected });
     eventCallback({ type: EventTypes.onSecureChannelEstablished });
@@ -111,10 +111,10 @@ describe('VerifierService', () => {
 
   it('should go to data received state on receiving data received event', () => {
     const updateUIMock = jest.fn();
-    const instance = new VerifierService('test', updateUIMock);
+    const service = new VerifierService('test', updateUIMock);
     const dummyVC = 'DUMMY_VC';
 
-    instance.startTransfer();
+    service.startTransfer();
 
     const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
     eventCallback({ type: EventTypes.onConnected });
@@ -139,9 +139,9 @@ describe('VerifierService', () => {
 
   it('should disconnect go back to idle state', () => {
     const updateUIMock = jest.fn();
-    const instance = new VerifierService('test', updateUIMock);
+    const service = new VerifierService('test', updateUIMock);
 
-    instance.startTransfer();
+    service.startTransfer();
 
     const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
     eventCallback({ type: EventTypes.onConnected });
@@ -170,11 +170,11 @@ describe('VerifierService', () => {
 
   it('should got to error state on error', () => {
     const updateUIMock = jest.fn();
-    const instance = new VerifierService('test', updateUIMock);
+    const service = new VerifierService('test', updateUIMock);
     const errorMessage = 'Error happened';
     const errorCode = '123';
 
-    instance.startTransfer();
+    service.startTransfer();
 
     const eventCallback = tuvali.verifier.handleDataEvents.mock.calls[0][0];
     eventCallback({
@@ -193,14 +193,35 @@ describe('VerifierService', () => {
     });
   });
 
+  it('should go to idle state and disconnect on disconnect', () => {
+    const updateUIMock = jest.fn();
+    const service = new VerifierService('test', updateUIMock);
+
+    service.startTransfer();
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: { stopAdvertising: expect.any(Function) },
+      data: { uri: 'DUMMY_URI' },
+      name: 'Advertising',
+    });
+
+    service.disconnect();
+
+    expect(updateUIMock).toHaveBeenLastCalledWith({
+      actions: { startAdvertisement: expect.any(Function) },
+      data: {},
+      name: 'Idle',
+    });
+  });
+
   it('should stop advertisement on calling stopAction and go back to idle state', () => {
     let state = {};
     const updateUIMock = jest.fn((s) => {
       state = s;
     });
-    const instance = new VerifierService('test', updateUIMock);
+    const service = new VerifierService('test', updateUIMock);
 
-    instance.startTransfer();
+    service.startTransfer();
     state.actions.stopAdvertising();
 
     expect(updateUIMock).toHaveBeenLastCalledWith({

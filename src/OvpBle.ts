@@ -32,7 +32,7 @@ class OvpBle {
   }
 
   stopTransfer() {
-    // TODO: need to implement
+    this.service.disconnect();
   }
 }
 

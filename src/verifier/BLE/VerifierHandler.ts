@@ -32,6 +32,10 @@ class VerifierHandler {
   disconnect() {
     verifier.disconnect();
   }
+
+  stop() {
+    verifier.disconnect();
+  }
 }
 
 const verifierHandler = new VerifierHandler();

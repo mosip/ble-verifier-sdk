@@ -1,12 +1,13 @@
-import OvpBle from '../../middleware/OvpBle';
-import VerifierService from '../../middleware/verifier/VerifierService';
+import OvpBle from '../OvpBle';
+import VerifierService from '../verifier/VerifierService';
 
 const mockStartTransfer = jest.fn();
+const mockDisconnect = jest.fn();
 
-jest.mock('../../middleware/verifier/VerifierService', () => {
+jest.mock('../verifier/VerifierService', () => {
   // Works and lets you check for constructor calls:
   return jest.fn().mockImplementation(() => {
-    return { startTransfer: mockStartTransfer };
+    return { startTransfer: mockStartTransfer, disconnect: mockDisconnect };
   });
 });
 
@@ -36,5 +37,13 @@ describe('OvpBLE', () => {
     updateUIFromConstructorParams(dummyState);
     expect(instance.UI).toEqual(dummyState);
     expect(deviceNameFromConstructorParams).toEqual('test');
+  });
+
+  it('should call disconnect on stop transfer', () => {
+    const instance = new OvpBle({ deviceName: 'test' });
+
+    instance.stopTransfer();
+
+    expect(mockDisconnect).toBeCalled();
   });
 });
