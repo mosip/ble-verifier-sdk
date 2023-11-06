@@ -63,6 +63,6 @@ export interface ErrorInfo {
   errorMessage: string;
 }
 
-export interface Config {
+export interface ConfigOptions {
   deviceName: string;
 }

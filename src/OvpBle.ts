@@ -1,14 +1,15 @@
 import VerifierService from './verifier/VerifierService';
 import type {
-  Config,
   IntermediateState,
   ErrorInfo,
   ReceivedState,
+  ConfigOptions,
 } from './types';
 import type { IOvpBle } from './IOvpBle';
 import type { IVerifierService } from './verifier/IVerifierService';
 import { State } from './verifier/State';
 import { ErrorCodes, ErrorMessages } from './error';
+import { Config } from './Config';
 
 class OvpBle implements IOvpBle {
   // @ts-ignore
@@ -17,11 +18,13 @@ class OvpBle implements IOvpBle {
   private resultReject: (reason?: ErrorInfo) => void;
   public UI: IntermediateState | undefined;
   private service: IVerifierService;
+  private config: Config;
   private stateChangeCallback: (state: IntermediateState) => void = () => {};
 
-  constructor(config: Config) {
+  constructor(configOptions: ConfigOptions) {
+    this.config = new Config(configOptions);
     this.service = new VerifierService(
-      config.deviceName,
+      configOptions.deviceName,
       this.onStateUpdate.bind(this)
     );
   }
@@ -47,6 +50,10 @@ class OvpBle implements IOvpBle {
   }
 
   startTransfer() {
+    const error = this.config.validate();
+
+    if (error) return Promise.reject(error);
+
     this.service.startTransfer();
 
     return new Promise<string>((res, rej) => {

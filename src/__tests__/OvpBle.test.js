@@ -81,4 +81,16 @@ describe('OvpBLE', () => {
 
     await expect(promise).rejects.toBe(receivedState.data);
   });
+
+  it('should reject Promise if device name is larger than 11 characters', async () => {
+    const instance = new OvpBle({ deviceName: 'very_long_device_name' });
+    const expectedError = {
+      errorCode: 'OVP_002',
+      errorMessage: 'Device name length exeeded limit of 11 characters',
+    };
+
+    const promise = instance.startTransfer();
+
+    await expect(promise).rejects.toEqual(expectedError);
+  });
 });
