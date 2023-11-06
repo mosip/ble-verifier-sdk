@@ -1,5 +1,5 @@
 {
-  "name": "react-native-ovp-ble",
+  "name": "@mosip/react-native-ovp-ble",
   "version": "0.1.0",
   "description": "React Native module to provide verifier capability using Tuvali. This module follows OpenID4VP BLE spec",
   "main": "lib/commonjs/index",
