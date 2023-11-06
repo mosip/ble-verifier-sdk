@@ -1,44 +1,21 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button, StyleSheet, Text, View } from 'react-native';
-import OVPBLE from '@mosip/react-native-ovp-ble';
-import QRCode from 'react-native-qrcode-svg';
-import { IntermediateState } from '@mosip/react-native-ovp-ble';
+import OVPBLE, { useUI } from '@mosip/react-native-ovp-ble';
+import { IntermediateStateUI } from './IntermediateStateUI';
 
 const ovpble = new OVPBLE({ deviceName: 'example' });
 
-function IntermediateStateUI(props: { state: IntermediateState }) {
-  return (
-    <View style={styles.intermediateStateContainer}>
-      <Text style={styles.state}>Intermediate Screens</Text>
-      <Text style={styles.state}>State: {props.state.name}</Text>
-
-      {props.state.name === 'Advertising' && (
-        <QRCode size={200} value={props.state.data.uri} />
-      )}
-      {Object.entries(props.state.actions || {}).map(([name, action]) => (
-        <Button key={name} title={name} onPress={() => action()} />
-      ))}
-    </View>
-  );
-}
-
 export default function App() {
-  const [state, setState] = useState<IntermediateState>({});
+  const { state } = useUI(ovpble);
   const [result, setResult] = useState<any>('');
   const [error, setError] = useState<any>(null);
-
-  const setupInstance = () => {
-    setState(ovpble.UI);
-    ovpble.listenForStateChanges((intermediateState) => {
-      setState(intermediateState);
-    });
-  };
 
   const startTransfer = () => {
     setResult('');
     setError(null);
+
     ovpble
       .startTransfer()
       .then((vc) => {
@@ -48,10 +25,6 @@ export default function App() {
         setError(err);
       });
   };
-
-  useEffect(() => {
-    setupInstance();
-  }, []);
 
   const subject = result?.verifiableCredential?.credential?.credentialSubject;
 
