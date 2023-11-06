@@ -2,15 +2,16 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { Button, StyleSheet, Text, View } from 'react-native';
-import OVPBLE from 'react-native-ovp-ble';
+import OVPBLE from '@mosip/react-native-ovp-ble';
 import QRCode from 'react-native-qrcode-svg';
-import { IntermediateState } from '../../src/middleware/types';
+import { IntermediateState } from '@mosip/react-native-ovp-ble';
 
 const ovpble = new OVPBLE({ deviceName: 'example' });
 
 function IntermediateStateUI(props: { state: IntermediateState }) {
   return (
-    <>
+    <View style={styles.intermediateStateContainer}>
+      <Text style={styles.state}>Intermediate Screens</Text>
       <Text style={styles.state}>State: {props.state.name}</Text>
 
       {props.state.name === 'Advertising' && (
@@ -19,13 +20,13 @@ function IntermediateStateUI(props: { state: IntermediateState }) {
       {Object.entries(props.state.actions || {}).map(([name, action]) => (
         <Button key={name} title={name} onPress={() => action()} />
       ))}
-    </>
+    </View>
   );
 }
 
 export default function App() {
   const [state, setState] = useState<IntermediateState>({});
-  const [result, setResult] = useState<string>('');
+  const [result, setResult] = useState<any>('');
   const [error, setError] = useState<any>(null);
 
   const setupInstance = () => {
@@ -40,25 +41,30 @@ export default function App() {
     setError(null);
     ovpble
       .startTransfer()
-      .then((vc) => setResult(vc))
-      .catch((err) => setError(err));
+      .then((vc) => {
+        setResult(JSON.parse(vc));
+      })
+      .catch((err) => {
+        setError(err);
+      });
   };
 
   useEffect(() => {
     setupInstance();
   }, []);
 
+  const subject = result?.verifiableCredential?.credential?.credentialSubject;
+
   return (
     <View style={styles.container}>
-      {state.name === 'Idle' && (
+      {(state.name === 'Idle' || state.name === 'Disconnected') && (
         <Button title={'Start Transfer'} onPress={startTransfer} />
       )}
-      <IntermediateStateUI state={state} />
       {result && (
         <View>
           <Text style={styles.state}>Received VC</Text>
           <Text style={styles.state}>
-            result: {JSON.stringify(result?.verifiableCredential)}
+            VC ID: {subject?.UIN || subject?.VID}
           </Text>
           <Button title={'Restart'} onPress={startTransfer} />
         </View>
@@ -70,6 +76,8 @@ export default function App() {
           <Button title={'Restart'} onPress={startTransfer} />
         </View>
       )}
+
+      <IntermediateStateUI state={state} />
     </View>
   );
 }
@@ -86,5 +94,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     color: 'black',
+  },
+  intermediateStateContainer: {
+    borderStyle: 'solid',
+    borderWidth: 1,
+    padding: 10,
+    marginTop: 20,
   },
 });

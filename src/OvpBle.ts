@@ -32,7 +32,7 @@ class OvpBle implements IOvpBle {
   onStateUpdate(state: IntermediateState) {
     console.log('Updating UI + ' + JSON.stringify(state));
     this.UI = state;
-    this.stateChangeCallback(state);
+    this.stateChangeCallback && this.stateChangeCallback(state);
 
     switch (this.UI?.name) {
       case State.RECEIVED:
