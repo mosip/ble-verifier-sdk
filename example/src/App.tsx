@@ -6,19 +6,42 @@ import OVPBLE from 'react-native-ovp-ble';
 import QRCode from 'react-native-qrcode-svg';
 import { IntermediateState } from '../../src/middleware/types';
 
+const ovpble = new OVPBLE({ deviceName: 'example' });
+
+function IntermediateStateUI(props: { state: IntermediateState }) {
+  return (
+    <>
+      <Text style={styles.state}>State: {props.state.name}</Text>
+
+      {props.state.name === 'Advertising' && (
+        <QRCode size={200} value={props.state.data.uri} />
+      )}
+      {Object.entries(props.state.actions || {}).map(([name, action]) => (
+        <Button key={name} title={name} onPress={() => action()} />
+      ))}
+    </>
+  );
+}
+
 export default function App() {
-  const [instance, setInstance] = useState({});
   const [state, setState] = useState<IntermediateState>({});
+  const [result, setResult] = useState<string>('');
+  const [error, setError] = useState<any>(null);
 
   const setupInstance = () => {
-    const ovpble = new OVPBLE({ deviceName: 'example' });
-
     setState(ovpble.UI);
     ovpble.listenForStateChanges((intermediateState) => {
       setState(intermediateState);
     });
+  };
 
-    setInstance(ovpble);
+  const startTransfer = () => {
+    setResult('');
+    setError(null);
+    ovpble
+      .startTransfer()
+      .then((vc) => setResult(vc))
+      .catch((err) => setError(err));
   };
 
   useEffect(() => {
@@ -27,24 +50,25 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.state}>State: {state.name}</Text>
-      <Text style={styles.state}>
-        Data: {JSON.stringify(state.data)?.substring(0, 100)}...
-      </Text>
       {state.name === 'Idle' && (
-        <Button
-          title={'Start Transfer'}
-          onPress={() => instance.startTransfer()}
-        />
+        <Button title={'Start Transfer'} onPress={startTransfer} />
       )}
-      {state.name === 'Advertising' && (
-        <QRCode size={200} value={state.data.uri} />
+      <IntermediateStateUI state={state} />
+      {result && (
+        <View>
+          <Text style={styles.state}>Received VC</Text>
+          <Text style={styles.state}>
+            result: {JSON.stringify(result?.verifiableCredential)}
+          </Text>
+          <Button title={'Restart'} onPress={startTransfer} />
+        </View>
       )}
-      {Object.entries(state.actions || {}).map(([name, action]) => (
-        <Button key={name} title={name} onPress={() => action()} />
-      ))}
-      {state.name === 'Received' && (
-        <Button title={'Restart'} onPress={() => setupInstance()} />
+      {error && (
+        <View>
+          <Text style={styles.state}>Error In Transfer</Text>
+          <Text style={styles.state}>error: {JSON.stringify(error)}</Text>
+          <Button title={'Restart'} onPress={startTransfer} />
+        </View>
       )}
     </View>
   );
