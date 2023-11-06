@@ -5,5 +5,5 @@ export enum ErrorCodes {
 
 export enum ErrorMessages {
   OVP_001 = 'Transfer stopped',
-  OVP_002 = 'Device name length exeeded limit of 11 characters',
+  OVP_002 = 'Device name length exceeded limit of 11 characters',
 }

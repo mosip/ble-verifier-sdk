@@ -86,7 +86,7 @@ describe('OvpBLE', () => {
     const instance = new OvpBle({ deviceName: 'very_long_device_name' });
     const expectedError = {
       errorCode: 'OVP_002',
-      errorMessage: 'Device name length exeeded limit of 11 characters',
+      errorMessage: 'Device name length exceeded limit of 11 characters',
     };
 
     const promise = instance.startTransfer();
