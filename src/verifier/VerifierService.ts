@@ -16,7 +16,6 @@ class VerifierService implements IVerifierService {
   private readonly updateIntermediateState: (state: IntermediateState) => void;
   private deviceName: string;
 
-  // TODO: Have to limit deviceName length to 11 bytes
   constructor(
     deviceName: string,
     updateIntermediateState: (state: IntermediateState) => void

@@ -39,7 +39,7 @@ Initialize the `ovp-ble` module with the config provided
 
 #### 2. `startTransfer()`
 
-This API starts the BLE trasfer with the config provided. This method returns a `Promise<String>`. 
+This API starts the BLE transfer with the config provided. This method returns a `Promise<String>`.
 
 ##### Success Case
 
@@ -51,7 +51,7 @@ Note: Once  the specification is completed, this will be returning VP instead.
 
 ##### Error Case
 
-Promise rejects with error code and error method. 
+Promise rejects with error code and error method.
 ```
 {
   errorCode: string;
@@ -59,10 +59,11 @@ Promise rejects with error code and error method.
 }
 ```
 
-Most of the error code are coming from Tuvali. Some of them are from ovp-ble itself. Such as 
+Most of the error code are coming from Tuvali. Some of them are from ovp-ble itself. Such as
 
 * `OVP_001 --> 'Transfer stopped'`
-* [Tuvali error codes](//todo)
+* `OVP_002 --> 'Device name length exceeded limit of 11 characters'`
+* [Tuvali error codes](https://github.com/mosip/tuvali/blob/develop/docs/error-handling.md#error-codes)
 
 #### 3. `stopTransfer()`
 
