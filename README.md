@@ -1,4 +1,4 @@
-# react-native-ovp-ble
+# ble-verifier-sdk
 
 This module facilitates seamless interaction with Tuvali's verifier module for BLE (Bluetooth Low Energy) transfers. It offers a user-friendly API tailored for the verifier App's convenience. Additionally, it maintains essential state data within its context, which the UI module can access and utilize effectively.
 
@@ -7,14 +7,14 @@ Also have React Hooks, Request Util and any other utilities that makes it easier
 ## Installation
 
 ```sh
-npm install @mosip/react-native-ovp-ble
+npm install mosip-react-native-ble-verifier-sdk
 ```
 
 ## Usage
 
 ```javascript
-import OVP_BLE from "ovp-ble";
-import OVP_BLE_Verifier_UI from "ovp-ble-verifier-ui";
+import OVP_BLE from "mosip-react-native-ble-verifier-sdk";
+import OVP_BLE_Verifier_UI from "mosip-react-native-ble-verifier-ui";
 const instance = new OVP_BLE({deviceName: "simVerifier"});
 
 const VPShare = ({onSuccess}) => {
@@ -26,7 +26,7 @@ const VPShare = ({onSuccess}) => {
 }
 ```
 
-Note: The `ovp-ble-verifier-ui` module is yet to be build. If you want to implement your own UI screens, please look at the [documentation](docs/UI-IMPLEMENTATION.md) for internal APIs.
+Note: The `mosip-react-native-ble-verifier-ui` module is yet to be build. If you want to implement your own UI screens, please look at the [documentation](docs/UI-IMPLEMENTATION.md) for internal APIs.
 
 ## API Reference
 #### 1. `new new OVP_BLE(config)`

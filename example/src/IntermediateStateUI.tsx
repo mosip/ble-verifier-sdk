@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Button, StyleSheet, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import { IntermediateState } from '@mosip/react-native-ovp-ble';
+import { IntermediateState } from 'mosip-react-native-ble-verifier-sdk';
 
 export function IntermediateStateUI(props: { state: IntermediateState }) {
   return (

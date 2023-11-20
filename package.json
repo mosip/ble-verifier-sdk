@@ -1,5 +1,5 @@
 {
-  "name": "@mosip/react-native-ovp-ble",
+  "name": "mosip-react-native-ble-verifier-sdk",
   "version": "0.1.0",
   "description": "React Native module to provide verifier capability using Tuvali. This module follows OpenID4VP BLE spec",
   "main": "lib/commonjs/index",
@@ -26,7 +26,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace react-native-ovp-ble-example",
+    "example": "yarn workspace ble-verifier-sdk-example",
     "test": "jest --coverage",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -39,13 +39,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/mosip/react-native-ovp-ble",
+  "repository": "https://github.com/mosip/ble-verifier-sdk",
   "author": "MOSIP",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mosip/react-native-ovp-ble/issues"
+    "url": "https://github.com/mosip/ble-verifier-sdk/issues"
   },
-  "homepage": "https://github.com/mosip/react-native-ovp-ble#readme",
+  "homepage": "https://github.com/mosip/ble-verifier-sdk#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

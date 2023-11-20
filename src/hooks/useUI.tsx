@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { IntermediateState } from 'react-native-ovp-ble';
+import type { IntermediateState } from 'ble-verifier-sdk';
 import OvpBle from '../OvpBle';
 
 export const useUI = (instance: OvpBle) => {
