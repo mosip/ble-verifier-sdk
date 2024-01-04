@@ -1,0 +1,42 @@
+name: Build, publish to npm registry
+on:
+  release:
+    types: [published]
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Message for manually triggering'
+        required: false
+        default: 'Triggered for Updates'
+        type: string
+  push:
+    branches:
+      - '!release-branch'
+      - release*
+      - master
+      - 1.*
+      - develop*
+      - MOSIP*
+jobs:
+  build-tuvali:
+    uses: tw-mosip/kattu/.github/workflows/npm-build.yml@inji-678-build-publish
+    with:
+      SERVICE_LOCATION: '.'
+      ANDROID_LOCATION: 'android'
+      BUILD_ARTIFACT: BLE-Verifier-Sdk
+      BUILD_SCRIPT: 'npm run build'
+      OUTPUT_PATH: 'lib'
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  publish-tuvali-to-npm-registry:
+    if: "${{ !contains(github.ref, 'master') && github.event_name != 'pull_request' &&  github.event_name == 'workflow_dispatch' }}"
+    needs: build-tuvali
+    uses: tw-mosip/kattu/.github/workflows/npm-publish-to-npm-registry.yml@inji-678-build-publish
+    with:
+      SERVICE_LOCATION: '.'
+    secrets:
+      NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
