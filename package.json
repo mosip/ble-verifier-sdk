@@ -51,7 +51,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "react-native-tuvali": "github:mosip/tuvali#v0.4.5"
+    "@mosip/tuvali": "^0.4.9"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",

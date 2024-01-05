@@ -21,7 +21,7 @@ on:
       - MOSIP*
 jobs:
   build-ble-verifier:
-    uses: syedsalman3753/kattu/.github/workflows/npm-build.yml@master
+    uses: mosip/kattu/.github/workflows/npm-build.yml@master
     with:
       SERVICE_LOCATION: '.'
       BUILD_ARTIFACT: BLE-Verifier-Sdk
@@ -30,8 +30,9 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   publish-ble-verifier-to-npm-registry:
+    if: "${{ !contains(github.ref, 'master') && github.event_name != 'pull_request' &&  github.event_name == 'workflow_dispatch' }}"
     needs: build-ble-verifier
-    uses: syedsalman3753/kattu/.github/workflows/npm-publish-to-npm-registry.yml@master
+    uses: mosip/kattu/.github/workflows/npm-publish-to-npm-registry.yml@master
     with:
       SERVICE_LOCATION: '.'
     secrets:
