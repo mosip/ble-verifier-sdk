@@ -6,8 +6,8 @@ import type {
 } from '../types';
 import verifierHandler from './BLE/VerifierHandler';
 import stateBuilder from './StateBuilder';
-import tuvali from 'react-native-tuvali';
-import type { VerifierDataEvent } from 'react-native-tuvali/lib/typescript/types/events';
+import tuvali from '@mosip/tuvali';
+import type { VerifierDataEvent } from '@mosip/tuvali/lib/typescript/types/events';
 import type { IVerifierService } from './IVerifierService';
 
 const { EventTypes } = tuvali;

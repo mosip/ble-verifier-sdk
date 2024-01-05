@@ -2,7 +2,7 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import { useUI } from '../../hooks';
 import OvpBle from '../../OvpBle';
 
-jest.mock('react-native-tuvali', () => ({
+jest.mock('@mosip/tuvali', () => ({
   verifier: {
     startAdvertisement: jest.fn(() => 'DUMMY_URI'),
     handleDataEvents: jest.fn(),

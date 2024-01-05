@@ -13,7 +13,7 @@
     "react-native": "0.70.6",
     "react-native-qrcode-svg": "^6.2.0",
     "react-native-svg": "^13.14.0",
-    "react-native-tuvali": "github:mosip/tuvali#v0.4.5"
+    "@mosip/tuvali": "^0.4.9"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

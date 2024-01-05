@@ -1,5 +1,5 @@
-import tuvali from 'react-native-tuvali';
-import type { VerifierDataEvent } from 'react-native-tuvali/lib/typescript/types/events';
+import tuvali from '@mosip/tuvali';
+import type { VerifierDataEvent } from '@mosip/tuvali/lib/typescript/types/events';
 
 const { verifier, VerificationStatus } = tuvali;
 
