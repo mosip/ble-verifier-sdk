@@ -21,18 +21,17 @@ on:
       - MOSIP*
 jobs:
   build-ble-verifier:
-    uses: tw-mosip/kattu/.github/workflows/npm-build.yml@inji-678-build-publish
+    uses: syedsalman3753/kattu/.github/workflows/npm-build.yml@master
     with:
       SERVICE_LOCATION: '.'
       BUILD_ARTIFACT: BLE-Verifier-Sdk
-      BUILD_SCRIPT: 'npm run build'
-      OUTPUT_PATH: 'lib'
+      NPM_BUILD_TYPE: 'BOB'
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   publish-ble-verifier-to-npm-registry:
     needs: build-ble-verifier
-    uses: tw-mosip/kattu/.github/workflows/npm-publish-to-npm-registry.yml@inji-678-build-publish
+    uses: syedsalman3753/kattu/.github/workflows/npm-publish-to-npm-registry.yml@master
     with:
       SERVICE_LOCATION: '.'
     secrets:
