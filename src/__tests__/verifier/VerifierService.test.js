@@ -1,7 +1,7 @@
 import VerifierService from '../../verifier/VerifierService';
-import tuvali, { EventTypes } from 'react-native-tuvali';
+import tuvali, { EventTypes } from '@mosip/tuvali';
 
-jest.mock('react-native-tuvali', () => ({
+jest.mock('@mosip/tuvali', () => ({
   verifier: {
     startAdvertisement: jest.fn(() => 'DUMMY_URI'),
     handleDataEvents: jest.fn(),

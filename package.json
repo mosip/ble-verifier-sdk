@@ -1,5 +1,5 @@
 {
-  "name": "mosip-react-native-ble-verifier-sdk",
+  "name": "@mosip/ble-verifier-sdk",
   "version": "0.1.0",
   "description": "React Native module to provide verifier capability using Tuvali. This module follows OpenID4VP BLE spec",
   "main": "lib/commonjs/index",
@@ -31,8 +31,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli lib",
-    "prepare": "bob build",
-    "release": "release-it"
+    "build": "bob build",
+    "release": "release-it",
+    "verify": "npm run test && bob build"
   },
   "keywords": [
     "react-native",
@@ -50,7 +51,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "react-native-tuvali": "github:mosip/tuvali#v0.4.5"
+    "@mosip/tuvali": "^0.4.9"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { Button, StyleSheet, Text, View } from 'react-native';
-import OVPBLE, { useUI } from 'mosip-react-native-ble-verifier-sdk';
+import OVPBLE, { useUI } from '@mosip/ble-verifier-sdk';
 import { IntermediateStateUI } from './IntermediateStateUI';
 
 const ovpble = new OVPBLE({ deviceName: 'example' });
