@@ -7,13 +7,13 @@ Also have React Hooks, Request Util and any other utilities that makes it easier
 ## Installation
 
 ```sh
-npm install mosip-react-native-ble-verifier-sdk
+npm install @mosip/ble-verifier-sdk
 ```
 
 ## Usage
 
 ```javascript
-import OVP_BLE from "mosip-react-native-ble-verifier-sdk";
+import OVP_BLE from "@mosip/ble-verifier-sdk";
 import OVP_BLE_Verifier_UI from "mosip-react-native-ble-verifier-ui";
 const instance = new OVP_BLE({deviceName: "simVerifier"});
 
