@@ -1,6 +1,6 @@
 {
   "name": "@mosip/ble-verifier-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Native module to provide verifier capability using Tuvali. This module follows OpenID4VP BLE spec",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
